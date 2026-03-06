@@ -1,6 +1,7 @@
 # Voice Agent
 
 A LiveKit-based call center voice agent with three role-based agents:
+- Onboarding / system introduction
 - Tier 1 support
 - Tier 2 escalation
 - Feedback collection
@@ -14,6 +15,7 @@ Try the deployed agent here:
 ## Features
 
 - Multi-agent phone support flow with support, escalation, and feedback roles
+- Onboarding agent that can explain the system before routing the caller to support
 - Role-based voice output using LiveKit Inference TTS
 - Live call handoff tools between agents
 - Tier 1 to feedback path for resolved issues without escalation
@@ -40,6 +42,7 @@ Try the deployed agent here:
 
 ## Project Flow
 
+- `OnboardingAgent` welcomes the caller and optionally explains the system
 - `CallAgent` handles frontline support
 - `EscalationAgent` handles advanced troubleshooting and escalations
 - `FeedbackAgent` confirms caller email, collects feedback, writes to Google Sheets, sends email, and closes the call
@@ -64,6 +67,7 @@ AgentSession
   |
   v
 call_agent.py
+  |- OnboardingAgent
   |- CallAgent
   |- EscalationAgent
   |- FeedbackAgent
