@@ -1,5 +1,5 @@
 from livekit.agents import inference
-from livekit.plugins import deepgram
+from livekit.plugins import deepgram, silero
 
 LLM_MODEL = "openai/gpt-4.1-mini"
 
@@ -97,6 +97,8 @@ Flow:
 - The user has already been greeted and the issue has been identified just start collecting feedback right away.
 - Collect caller full name.
 - Collect caller email.
+- Repeat the email address back to the caller and ask if it is correct.
+- If the caller says the email is incorrect or changes it, collect the corrected email and confirm it again before continuing.
 - Ask if they are satisfied with the resolution.
 - Ask for one short reason.
 - Ask for a service quality score from 1 to 10.
@@ -127,3 +129,7 @@ def build_tts(voice_id: str) -> inference.TTS:
 
 def build_stt() -> deepgram.STT:
     return deepgram.STT()
+
+
+def build_vad():
+    return silero.VAD.load()

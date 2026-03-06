@@ -108,10 +108,7 @@ class EscalationAgent(BaseCallCenterAgent):
     async def on_enter(self):
         """Generate a greeting when this agent takes control of the session."""
         self.session.say(
-            "Hi, this is Orion, your Tier 2 escalation specialist. I handle advanced troubleshooting and escalated concerns."
-        )
-        self.session.generate_reply(
-            instructions=f"Continue immediately after the introduction for {self.topic}. Do not say thank you, got it, understood, I understand, or any other filler acknowledgement. Do not repeat the introduction. Start directly with one focused diagnostic question. Do not transfer to feedback now. In this first escalation turn, do not call any tools. Any prior yes/no before this handoff is not feedback consent."
+            f"Hi, this is Orion, your Tier 2 escalation specialist. I handle advanced troubleshooting and escalated concerns. For the {self.topic} issue, what exactly happens when you try to use it?"
         )
 
     @function_tool
@@ -146,10 +143,7 @@ class FeedbackAgent(BaseCallCenterAgent):
     async def on_enter(self):
         """Generate a greeting when this agent takes control of the session."""
         self.session.say(
-            "Hello, this is Thalia from the feedback team. I am here to collect your feedback on your previous issue."
-        )
-        self.session.generate_reply(
-            instructions=f"The issue topic was: {self.topic}. Continue immediately after this introduction. Do not say thank you, got it, understood, or any other filler acknowledgement. Do not repeat the introduction. Begin feedback immediately with the first feedback question. Ask one question at a time and keep it brief."
+            f"Hello, this is Thalia from the feedback team. I am here to collect your feedback about {self.topic}. May I have your full name, please?"
         )
 
     @function_tool

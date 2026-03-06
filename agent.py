@@ -11,6 +11,7 @@ from agent_config_format import (
     SESSION_PREEMPTIVE_GENERATION,
     SUPPORT_AGENT_INSTRUCTIONS,
     build_stt,
+    build_vad,
 )
 
 
@@ -24,6 +25,7 @@ async def entrypoint(ctx: JobContext):
 
     session = AgentSession(
         stt=build_stt(),
+        vad=build_vad(),
         llm=LLM_MODEL,
         preemptive_generation=SESSION_PREEMPTIVE_GENERATION,
         min_endpointing_delay=SESSION_MIN_ENDPOINTING_DELAY,
