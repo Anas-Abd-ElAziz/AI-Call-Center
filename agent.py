@@ -9,7 +9,6 @@ from agent_config_format import (
     SESSION_MAX_ENDPOINTING_DELAY,
     SESSION_MIN_ENDPOINTING_DELAY,
     SESSION_PREEMPTIVE_GENERATION,
-    SUPPORT_AGENT_INSTRUCTIONS,
     build_stt,
     build_vad,
 )
@@ -17,7 +16,7 @@ from agent_config_format import (
 
 load_dotenv(Path(__file__).resolve().parent / ".env.local")
 
-from call_agent import CallAgent
+from call_agent import OnboardingAgent
 
 
 async def entrypoint(ctx: JobContext):
@@ -34,9 +33,7 @@ async def entrypoint(ctx: JobContext):
 
     await session.start(
         room=ctx.room,
-        agent=CallAgent(
-            instructions=SUPPORT_AGENT_INSTRUCTIONS,
-        ),
+        agent=OnboardingAgent(),
         room_options=room_io.RoomOptions(
             video_input=False,
             audio_input=room_io.AudioInputOptions(

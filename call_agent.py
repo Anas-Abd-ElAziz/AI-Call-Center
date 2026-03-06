@@ -4,7 +4,10 @@ from livekit.agents.llm import function_tool
 from agent_config_format import (
     ESCALATION_VOICE_ID,
     FEEDBACK_VOICE_ID,
+    ONBOARDING_VOICE_ID,
+    SUPPORT_AGENT_INSTRUCTIONS,
     SUPPORT_VOICE_ID,
+    ONBOARDING_AGENT_INSTRUCTIONS,
     build_tts,
     escalation_instructions,
     feedback_instructions,
@@ -49,8 +52,40 @@ class BaseCallCenterAgent(Agent):
         return self._end_no_feedback(self._no_feedback_closing_line())
 
 
+class OnboardingAgent(BaseCallCenterAgent):
+    """Onboarding agent that introduces the system before support."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            instructions=ONBOARDING_AGENT_INSTRUCTIONS,
+            voice_id=ONBOARDING_VOICE_ID,
+        )
+
+    async def on_enter(self):
+        self.session.say(
+            "Hello, this is Nova. Before we begin, would you like a short description of how this call center system works?"
+        )
+
+    @function_tool
+    async def explainSystemAndContinue(self):
+        """Explain the system briefly, then transfer to frontline support."""
+        self.session.say(
+            "This system uses specialized agents. Tier 1 support helps with general troubleshooting, Tier 2 handles escalations, and our feedback agent collects your feedback at the end if you would like to provide it."
+        )
+        return CallAgent(instructions=CallAgent.support_instructions()), ""
+
+    @function_tool
+    async def continueToSupport(self):
+        """Transfer directly to frontline support without explaining the system."""
+        return CallAgent(instructions=CallAgent.support_instructions()), ""
+
+
 class CallAgent(BaseCallCenterAgent):
     """Tier 1 support agent — first point of contact."""
+
+    @staticmethod
+    def support_instructions() -> str:
+        return SUPPORT_AGENT_INSTRUCTIONS
 
     def __init__(self, instructions: str) -> None:
         super().__init__(instructions=instructions, voice_id=SUPPORT_VOICE_ID)
