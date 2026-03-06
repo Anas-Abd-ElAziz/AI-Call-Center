@@ -111,7 +111,7 @@ class EscalationAgent(BaseCallCenterAgent):
             "Hi, this is Orion, your Tier 2 escalation specialist. I handle advanced troubleshooting and escalated concerns."
         )
         self.session.generate_reply(
-            instructions=f"Continue naturally from this handoff and help with troubleshooting for {self.topic}. Do not repeat the introduction or add another generic reassurance line. Ask one focused diagnostic question immediately. Do not transfer to feedback now. In this first escalation turn, do not call any tools. Any prior yes/no before this handoff is not feedback consent."
+            instructions=f"Continue immediately after the introduction for {self.topic}. Do not say thank you, got it, understood, I understand, or any other filler acknowledgement. Do not repeat the introduction. Start directly with one focused diagnostic question. Do not transfer to feedback now. In this first escalation turn, do not call any tools. Any prior yes/no before this handoff is not feedback consent."
         )
 
     @function_tool
@@ -149,7 +149,7 @@ class FeedbackAgent(BaseCallCenterAgent):
             "Hello, this is Thalia from the feedback team. I am here to collect your feedback on your previous issue."
         )
         self.session.generate_reply(
-            instructions=f"The issue topic was: {self.topic}. Continue naturally after this introduction. Do not repeat the introduction or add another generic reassurance line. Begin feedback immediately by asking the first feedback question. Ask one question at a time and keep it brief."
+            instructions=f"The issue topic was: {self.topic}. Continue immediately after this introduction. Do not say thank you, got it, understood, or any other filler acknowledgement. Do not repeat the introduction. Begin feedback immediately with the first feedback question. Ask one question at a time and keep it brief."
         )
 
     @function_tool
@@ -181,13 +181,13 @@ class FeedbackAgent(BaseCallCenterAgent):
         if errors:
             failed_parts = ", ".join(errors)
             self.session.say(
-                f"Thank you, {caller_name}. I created ticket {ticket_number}, but there was a system issue while saving or sending confirmation. Your feedback is still important to us and our team will follow up. Goodbye."
+                f"Thank you, {caller_name}. I created ticket {ticket_number}, but there was a system issue while saving or sending confirmation. Your feedback is still important to us and our team will follow up."
             )
             self.session.shutdown(drain=True)
             return f"Ticket {ticket_number} created, but integrations failed: {failed_parts}"
 
         self.session.say(
-            f"Thank you, {caller_name}. Your feedback has been recorded under ticket {ticket_number}. We have sent a confirmation email to {caller_email}. Your voice is important to us. Goodbye."
+            f"Thank you, {caller_name}. Your feedback has been recorded under ticket {ticket_number}. We have sent a confirmation email to {caller_email}. Your voice is important to us."
         )
         self.session.shutdown(drain=True)
         return f"Feedback captured, stored, and emailed. Ticket {ticket_number}."

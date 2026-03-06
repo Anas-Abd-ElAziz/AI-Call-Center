@@ -27,19 +27,19 @@ class FeedbackRecord:
 
 
 def _load_google_credentials():
-    creds_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
     creds_info = os.getenv("GOOGLE_SERVICE_ACCOUNT_INFO")
-
-    if creds_path:
-        return service_account.Credentials.from_service_account_file(
-            creds_path,
-            scopes=SHEETS_SCOPE,
-        )
+    creds_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
 
     if creds_info:
         info = json.loads(creds_info)
         return service_account.Credentials.from_service_account_info(
             info,
+            scopes=SHEETS_SCOPE,
+        )
+
+    if creds_path:
+        return service_account.Credentials.from_service_account_file(
+            creds_path,
             scopes=SHEETS_SCOPE,
         )
 
@@ -71,7 +71,7 @@ def append_feedback_to_sheet(record: FeedbackRecord) -> str:
             record.created_at,
             record.caller_name,
             record.caller_email,
-            '=IF(A1="","","T-"&TEXT(ROW()-1,"0000"))',
+            '=IF(A2="","","T-"&TEXT(COUNTA($A$2:A2),"0000"))',
             "Yes" if record.satisfied else "No",
             record.reason,
             str(record.rating),
