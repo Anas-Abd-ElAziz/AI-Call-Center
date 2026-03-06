@@ -110,6 +110,32 @@ For new versions, run the deploy command again from the project root after updat
 
 This deployment setup uses the project Dockerfile, and your deployment environment is configured from `.env.local` in your current workflow.
 
+## GitHub Auto Deploy
+
+This repo includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that can deploy the agent automatically on pushes to `main`.
+
+Required GitHub repository secrets:
+
+- `LIVEKIT_URL`
+- `LIVEKIT_API_KEY`
+- `LIVEKIT_API_SECRET`
+- `DEEPGRAM_API_KEY`
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASSWORD`
+- `SMTP_FROM`
+- `GOOGLE_SERVICE_ACCOUNT_INFO`
+- `GOOGLE_SHEETS_SPREADSHEET_ID`
+- `GOOGLE_SHEETS_RANGE`
+
+The workflow:
+
+- installs the LiveKit CLI
+- adds your LiveKit Cloud project to the CLI
+- builds a deployment secrets file from GitHub secrets
+- runs `lk agent deploy`
+
 ## Local Setup
 
 1. Install Python 3.12+

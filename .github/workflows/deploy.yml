@@ -1,0 +1,44 @@
+name: Deploy LiveKit Agent
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install LiveKit CLI
+        run: curl -sSL https://get.livekit.io/cli | bash
+
+      - name: Add LiveKit project to CLI
+        run: |
+          $HOME/.livekit/bin/lk project add github-actions \
+            --url "${{ secrets.LIVEKIT_URL }}" \
+            --api-key "${{ secrets.LIVEKIT_API_KEY }}" \
+            --api-secret "${{ secrets.LIVEKIT_API_SECRET }}" \
+            --default
+
+      - name: Create deployment secrets file
+        shell: bash
+        run: |
+          cat > .env.deploy <<'EOF'
+          DEEPGRAM_API_KEY=${{ secrets.DEEPGRAM_API_KEY }}
+          SMTP_HOST=${{ secrets.SMTP_HOST }}
+          SMTP_PORT=${{ secrets.SMTP_PORT }}
+          SMTP_USER=${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM=${{ secrets.SMTP_FROM }}
+          GOOGLE_SERVICE_ACCOUNT_INFO=${{ secrets.GOOGLE_SERVICE_ACCOUNT_INFO }}
+          GOOGLE_SHEETS_SPREADSHEET_ID=${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+          GOOGLE_SHEETS_RANGE=${{ secrets.GOOGLE_SHEETS_RANGE }}
+          EOF
+
+      - name: Deploy agent to LiveKit Cloud
+        run: $HOME/.livekit/bin/lk agent deploy --secrets-file .env.deploy
