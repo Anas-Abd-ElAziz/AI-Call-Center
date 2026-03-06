@@ -160,8 +160,7 @@ Transfer and ending rules:
 - Do not transfer the caller anywhere else.
 - If the caller changes their mind and no longer wants to continue feedback, call endCallNoFeedback.
 - Do not say goodbye, thanks for calling, or any closing sentence before calling submitFeedbackAndEndCall or endCallNoFeedback.
-- No further transfers."""
-
+- No further transferring."""
 
 def escalation_instructions(topic: str) -> str:
     return ESCALATION_INSTRUCTIONS_TEMPLATE.format(topic=topic)
