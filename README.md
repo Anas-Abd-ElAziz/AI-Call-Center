@@ -19,6 +19,7 @@ Try the deployed agent here:
 - Tier 1 to feedback path for resolved issues without escalation
 - Feedback logging to Google Sheets
 - Follow-up confirmation email after feedback submission
+- Email confirmation step before feedback submission
 - Ticket creation tied to feedback records
 - Local development workflow with `uv` and LiveKit Playground
 - Deployed with Docker on LiveKit Cloud
@@ -28,6 +29,7 @@ Try the deployed agent here:
 - Python 3.12+
 - LiveKit Agents
 - Deepgram STT
+- Silero VAD
 - OpenAI LLM via LiveKit inference string
 - Cartesia TTS via LiveKit Inference
 - Google Sheets API for feedback logging
@@ -40,7 +42,7 @@ Try the deployed agent here:
 
 - `CallAgent` handles frontline support
 - `EscalationAgent` handles advanced troubleshooting and escalations
-- `FeedbackAgent` collects feedback, writes to Google Sheets, sends email, and closes the call
+- `FeedbackAgent` confirms caller email, collects feedback, writes to Google Sheets, sends email, and closes the call
 
 ## Architecture
 
@@ -56,6 +58,7 @@ agent.py
   v
 AgentSession
   |- STT: Deepgram
+  |- VAD: Silero
   |- LLM: OpenAI via LiveKit inference string
   |- TTS: Cartesia via LiveKit Inference
   |
