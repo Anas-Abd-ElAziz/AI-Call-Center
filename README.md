@@ -5,6 +5,17 @@ A LiveKit-based call center voice agent with three role-based agents:
 - Tier 2 escalation
 - Feedback collection
 
+## Features
+
+- Multi-agent phone support flow with support, escalation, and feedback roles
+- Role-based voice output using LiveKit Inference TTS
+- Live call handoff tools between agents
+- Tier 1 to feedback path for resolved issues without escalation
+- Feedback logging to Google Sheets
+- Follow-up confirmation email after feedback submission
+- Ticket creation tied to feedback records
+- Local development workflow with `uv` and LiveKit Playground
+
 ## Tech Stack
 
 - Python 3.12+
@@ -21,6 +32,35 @@ A LiveKit-based call center voice agent with three role-based agents:
 - `CallAgent` handles frontline support
 - `EscalationAgent` handles advanced troubleshooting and escalations
 - `FeedbackAgent` collects feedback, writes to Google Sheets, sends email, and closes the call
+
+## Architecture
+
+```text
+Caller
+  |
+  v
+LiveKit Room / Playground
+  |
+  v
+agent.py
+  |
+  v
+AgentSession
+  |- STT: Deepgram
+  |- LLM: OpenAI via LiveKit inference string
+  |- TTS: Cartesia via LiveKit Inference
+  |
+  v
+call_agent.py
+  |- CallAgent
+  |- EscalationAgent
+  |- FeedbackAgent
+  |
+  v
+feedback_ops.py
+  |- Google Sheets append
+  |- SMTP confirmation email
+```
 
 ## Local Setup
 
@@ -48,6 +88,25 @@ copy .env.example .env.local
 
 6. Share your target Google Sheet with the service account email as an editor
 
+## Environment Variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `LIVEKIT_API_KEY` | Yes | LiveKit API key |
+| `LIVEKIT_API_SECRET` | Yes | LiveKit API secret |
+| `LIVEKIT_URL` | Yes | LiveKit server URL |
+| `NEXT_PUBLIC_LIVEKIT_URL` | Optional | Client-facing LiveKit URL |
+| `GOOGLE_API_KEY` | Optional | General Google API access if needed |
+| `DEEPGRAM_API_KEY` | Yes | Speech-to-text provider key |
+| `SMTP_HOST` | Yes | SMTP server host |
+| `SMTP_PORT` | Yes | SMTP server port |
+| `SMTP_USER` | Yes | SMTP username/email |
+| `SMTP_PASSWORD` | Yes | SMTP password or app password |
+| `SMTP_FROM` | Yes | Sender email address |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Yes | Absolute path to Google service account JSON |
+| `GOOGLE_SHEETS_SPREADSHEET_ID` | Yes | Google Sheets document ID |
+| `GOOGLE_SHEETS_RANGE` | Optional | Target sheet range, e.g. `Calls!A:G` |
+
 ## Running Locally
 
 Start the worker in dev mode:
@@ -65,6 +124,12 @@ Then connect to your LiveKit room or Playground and talk to the agent.
 - `agent_config_format.py` - prompts and model config
 - `feedback_ops.py` - Google Sheets + email integration
 - `.env.example` - env variable template
+
+## Notes
+
+- `.env.local` and `service-account.json` must stay local and should never be committed
+- Rotate any credentials that were exposed during development before publishing
+- Screen sharing is currently disabled in this version
 
 ## Thoughts
 
