@@ -5,6 +5,12 @@ A LiveKit-based call center voice agent with three role-based agents:
 - Tier 2 escalation
 - Feedback collection
 
+## Live Demo
+
+Try the deployed agent here:
+
+- [AI Call Center Sandbox](https://ai-call-center-2jw2lw.sandbox.livekit.io)
+
 ## Features
 
 - Multi-agent phone support flow with support, escalation, and feedback roles
@@ -68,12 +74,6 @@ Deployment
   |- Docker container
   |- LiveKit Cloud
 ```
-
-## Live Demo
-
-Try the deployed agent here:
-
-- [AI Call Center Sandbox](https://ai-call-center-2jw2lw.sandbox.livekit.io)
 
 ## Deployment
 
