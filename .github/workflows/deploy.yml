@@ -15,11 +15,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install LiveKit CLI
-        run: curl -sSL https://get.livekit.io/cli | bash
+        shell: bash
+        run: |
+          curl -sSL https://get.livekit.io/cli | bash
+          export PATH="$HOME/.local/bin:$HOME/.livekit/bin:$PATH"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.livekit/bin" >> "$GITHUB_PATH"
+          command -v lk || find "$HOME" -type f -name lk 2>/dev/null | head -n 5
+          lk version || lk --help
 
       - name: Add LiveKit project to CLI
         run: |
-          $HOME/.livekit/bin/lk project add github-actions \
+          lk project add github-actions \
             --url "${{ secrets.LIVEKIT_URL }}" \
             --api-key "${{ secrets.LIVEKIT_API_KEY }}" \
             --api-secret "${{ secrets.LIVEKIT_API_SECRET }}" \
@@ -41,4 +48,4 @@ jobs:
           EOF
 
       - name: Deploy agent to LiveKit Cloud
-        run: $HOME/.livekit/bin/lk agent deploy --secrets-file .env.deploy
+        run: lk agent deploy --secrets-file .env.deploy
