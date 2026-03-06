@@ -97,6 +97,7 @@ Basic deployment flow:
 ```bash
 lk cloud auth
 lk agent create
+lk agent deploy
 ```
 
 Useful follow-up commands:
@@ -135,6 +136,8 @@ The workflow:
 - adds your LiveKit Cloud project to the CLI
 - builds a deployment secrets file from GitHub secrets
 - runs `lk agent deploy`
+
+After the workflow and repository secrets are configured, each push to `main` triggers a new deployment automatically.
 
 ## Local Setup
 
