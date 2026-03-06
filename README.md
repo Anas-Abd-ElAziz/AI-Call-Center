@@ -96,7 +96,6 @@ copy .env.example .env.local
 | `LIVEKIT_API_SECRET` | Yes | LiveKit API secret |
 | `LIVEKIT_URL` | Yes | LiveKit server URL |
 | `NEXT_PUBLIC_LIVEKIT_URL` | Optional | Client-facing LiveKit URL |
-| `GOOGLE_API_KEY` | Optional | General Google API access if needed |
 | `DEEPGRAM_API_KEY` | Yes | Speech-to-text provider key |
 | `SMTP_HOST` | Yes | SMTP server host |
 | `SMTP_PORT` | Yes | SMTP server port |

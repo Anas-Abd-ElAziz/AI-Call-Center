@@ -52,7 +52,7 @@ class BaseCallCenterAgent(Agent):
 class CallAgent(BaseCallCenterAgent):
     """Tier 1 support agent — first point of contact."""
 
-    def __init__(self, instructions: str, topic: str = "not specified yet") -> None:
+    def __init__(self, instructions: str) -> None:
         super().__init__(instructions=instructions, voice_id=SUPPORT_VOICE_ID)
 
     async def on_enter(self):

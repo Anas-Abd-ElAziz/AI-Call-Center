@@ -4,7 +4,6 @@ from livekit.plugins import noise_cancellation
 from livekit import rtc
 from dotenv import load_dotenv
 from pathlib import Path
-import logging
 from agent_config_format import (
     LLM_MODEL,
     SESSION_MAX_ENDPOINTING_DELAY,
@@ -16,7 +15,6 @@ from agent_config_format import (
 
 
 load_dotenv(Path(__file__).resolve().parent / ".env.local")
-logging.getLogger("google_genai.models").setLevel(logging.WARNING)
 
 from call_agent import CallAgent
 
