@@ -72,12 +72,12 @@ class OnboardingAgent(BaseCallCenterAgent):
         self.session.say(
             "This system uses specialized agents. Tier 1 support helps with general troubleshooting, Tier 2 handles escalations, and our feedback agent collects your feedback at the end if you would like to provide it."
         )
-        return CallAgent(instructions=CallAgent.support_instructions()), ""
+        return CallAgent(instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx), ""
 
     @function_tool
     async def continueToSupport(self):
         """Transfer directly to frontline support without explaining the system."""
-        return CallAgent(instructions=CallAgent.support_instructions()), ""
+        return CallAgent(instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx), ""
 
 
 class CallAgent(BaseCallCenterAgent):
@@ -87,8 +87,8 @@ class CallAgent(BaseCallCenterAgent):
     def support_instructions() -> str:
         return SUPPORT_AGENT_INSTRUCTIONS
 
-    def __init__(self, instructions: str) -> None:
-        super().__init__(instructions=instructions, voice_id=SUPPORT_VOICE_ID)
+    def __init__(self, instructions: str, chat_ctx=None) -> None:
+        super().__init__(instructions=instructions, voice_id=SUPPORT_VOICE_ID, chat_ctx=chat_ctx)
 
     async def on_enter(self):
         """Generate a greeting when this agent takes control of the session."""
