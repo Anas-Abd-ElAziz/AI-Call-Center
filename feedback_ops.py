@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import smtplib
 from dataclasses import dataclass
@@ -9,9 +8,10 @@ from email.message import EmailMessage
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+from call_logger import logger, log_event
+
 
 SHEETS_SCOPE = ["https://www.googleapis.com/auth/spreadsheets"]
-logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -97,9 +97,10 @@ def append_feedback_to_sheet(record: FeedbackRecord) -> str:
     if updated_rows < 1:
         raise RuntimeError(f"Google Sheets append returned no updated rows: {result}")
 
-    logger.info(
-        "Feedback appended to Google Sheets",
-        extra={"range": target_range, "updated_rows": updated_rows},
+    log_event(
+        "sheets.appended",
+        range=target_range,
+        updated_rows=updated_rows,
     )
 
     updated_data = (result.get("updates") or {}).get("updatedData") or {}
@@ -157,7 +158,7 @@ def send_feedback_email(record: FeedbackRecord) -> None:
         server.login(smtp_user, smtp_pass)
         server.send_message(msg)
 
-    logger.info("Feedback confirmation email sent", extra={"to": record.caller_email})
+    log_event("email.sent", to=record.caller_email)
 
 
 def store_feedback_and_notify(

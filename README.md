@@ -23,6 +23,7 @@ Try the deployed agent here:
 - Follow-up confirmation email after feedback submission
 - Email confirmation step before feedback submission
 - Ticket creation tied to feedback records
+- Structured runtime logs that LiveKit can forward to CloudWatch
 - Local development workflow with `uv` and LiveKit Playground
 - Deployed with Docker on LiveKit Cloud
 
@@ -91,6 +92,7 @@ Helpful LiveKit deployment references:
 - [LiveKit Agent Deployment Overview](https://docs.livekit.io/deploy/agents/)
 - [LiveKit Agent Deployment Quickstart](https://docs.livekit.io/deploy/agents/quickstart/)
 - [LiveKit Builds and Dockerfiles](https://docs.livekit.io/deploy/agents/builds/)
+- [LiveKit Log Collection](https://docs.livekit.io/deploy/agents/logs/)
 
 Basic deployment flow:
 
@@ -105,11 +107,13 @@ Useful follow-up commands:
 ```bash
 lk agent status
 lk agent logs
+lk agent logs --log-type=build
 ```
 
 For new versions, run the deploy command again from the project root after updating your code.
 
 This deployment setup uses the project Dockerfile, and your deployment environment is configured from `.env.local` in your current workflow.
+When `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optional `AWS_REGION` are present in LiveKit deployment secrets, LiveKit forwards runtime stdout and stderr logs to CloudWatch automatically.
 
 ## GitHub Auto Deploy
 
@@ -129,6 +133,9 @@ Required GitHub repository secrets:
 - `GOOGLE_SERVICE_ACCOUNT_INFO`
 - `GOOGLE_SHEETS_SPREADSHEET_ID`
 - `GOOGLE_SHEETS_RANGE`
+- `AWS_ACCESS_KEY_ID` (optional, enables CloudWatch forwarding)
+- `AWS_SECRET_ACCESS_KEY` (optional, enables CloudWatch forwarding)
+- `AWS_REGION` (optional, defaults to `us-west-2` in LiveKit)
 
 The workflow:
 
@@ -181,6 +188,9 @@ copy .env.example .env.local
 | `GOOGLE_SERVICE_ACCOUNT_INFO` | Yes | Full Google service account JSON stored as a single secret/env var |
 | `GOOGLE_SHEETS_SPREADSHEET_ID` | Yes | Google Sheets document ID |
 | `GOOGLE_SHEETS_RANGE` | Optional | Target sheet range, e.g. `Calls!A:G` |
+| `AWS_ACCESS_KEY_ID` | Optional | Enables LiveKit runtime log forwarding to CloudWatch |
+| `AWS_SECRET_ACCESS_KEY` | Optional | Enables LiveKit runtime log forwarding to CloudWatch |
+| `AWS_REGION` | Optional | AWS region for CloudWatch forwarding |
 
 ## Running Locally
 

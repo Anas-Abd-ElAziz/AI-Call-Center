@@ -17,10 +17,12 @@ from agent_config_format import (
 load_dotenv(Path(__file__).resolve().parent / ".env.local")
 
 from call_agent import OnboardingAgent
+from call_logger import log_event, setup_session_logging
 
 
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
+    log_event("call.started")
 
     session = AgentSession(
         stt=build_stt(),
@@ -30,6 +32,8 @@ async def entrypoint(ctx: JobContext):
         min_endpointing_delay=SESSION_MIN_ENDPOINTING_DELAY,
         max_endpointing_delay=SESSION_MAX_ENDPOINTING_DELAY,
     )
+
+    setup_session_logging(session)
 
     await session.start(
         room=ctx.room,

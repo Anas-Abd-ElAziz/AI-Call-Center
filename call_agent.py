@@ -13,6 +13,7 @@ from agent_config_format import (
     feedback_instructions,
 )
 from feedback_ops import store_feedback_and_notify
+from call_logger import log_event
 
 
 class BaseCallCenterAgent(Agent):
@@ -72,12 +73,16 @@ class OnboardingAgent(BaseCallCenterAgent):
         self.session.say(
             "This system uses specialized agents. Tier 1 support helps with general troubleshooting, Tier 2 handles escalations, and our feedback agent collects your feedback at the end if you would like to provide it."
         )
-        return CallAgent(instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx), ""
+        return CallAgent(
+            instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx
+        ), ""
 
     @function_tool
     async def continueToSupport(self):
         """Transfer directly to frontline support without explaining the system."""
-        return CallAgent(instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx), ""
+        return CallAgent(
+            instructions=CallAgent.support_instructions(), chat_ctx=self.chat_ctx
+        ), ""
 
 
 class CallAgent(BaseCallCenterAgent):
@@ -88,7 +93,9 @@ class CallAgent(BaseCallCenterAgent):
         return SUPPORT_AGENT_INSTRUCTIONS
 
     def __init__(self, instructions: str, chat_ctx=None) -> None:
-        super().__init__(instructions=instructions, voice_id=SUPPORT_VOICE_ID, chat_ctx=chat_ctx)
+        super().__init__(
+            instructions=instructions, voice_id=SUPPORT_VOICE_ID, chat_ctx=chat_ctx
+        )
 
     async def on_enter(self):
         """Generate a greeting when this agent takes control of the session."""
@@ -205,6 +212,14 @@ class FeedbackAgent(BaseCallCenterAgent):
             reason=reason.strip(),
             rating=rating,
             topic=self.topic,
+        )
+
+        log_event(
+            "feedback.submitted",
+            ticket=ticket_number,
+            rating=rating,
+            satisfied=satisfied,
+            errors=errors or None,
         )
 
         if errors:

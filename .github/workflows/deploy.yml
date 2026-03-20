@@ -46,6 +46,9 @@ jobs:
           GOOGLE_SERVICE_ACCOUNT_INFO=${{ secrets.GOOGLE_SERVICE_ACCOUNT_INFO }}
           GOOGLE_SHEETS_SPREADSHEET_ID=${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
           GOOGLE_SHEETS_RANGE=${{ secrets.GOOGLE_SHEETS_RANGE }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
           EOF
 
       - name: Deploy agent to LiveKit Cloud
