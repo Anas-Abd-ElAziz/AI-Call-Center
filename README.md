@@ -24,6 +24,7 @@ Try the deployed agent here:
 - Email confirmation step before feedback submission
 - Ticket creation tied to feedback records
 - Structured runtime logs that LiveKit can forward to CloudWatch
+- Per-turn latency logging from caller query to spoken agent reply
 - Local development workflow with `uv` and LiveKit Playground
 - Deployed with Docker on LiveKit Cloud
 
